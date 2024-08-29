@@ -15,7 +15,7 @@ func NewServer(cfg *config.Config, db *gorm.DB) *gin.Engine {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000", "https://pairs-trading-capstone.web.app/"},
+		AllowOrigins:     []string{"http://localhost:3000", "https://pairs-trading-capstone.web.app"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,
