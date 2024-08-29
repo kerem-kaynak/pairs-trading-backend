@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"pairs-trading-backend/internal/config"
 
@@ -25,8 +26,9 @@ type GoogleUser struct {
 }
 
 func GetGoogleOauthConfig(cfg *config.Config) *oauth2.Config {
+	redirectURL := fmt.Sprintf("%s/auth/google/callback", os.Getenv("GOOGLE_REDIRECT_URL_HOST"))
 	return &oauth2.Config{
-		RedirectURL:  "http://localhost:8080/auth/google/callback",
+		RedirectURL:  redirectURL,
 		ClientID:     cfg.GoogleClientID,
 		ClientSecret: cfg.GoogleClientSecret,
 		Scopes: []string{
