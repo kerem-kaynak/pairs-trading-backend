@@ -17,6 +17,7 @@ func NewServer(cfg *config.Config, db *gorm.DB) *gin.Engine {
 	tickerHandler := handlers.NewTickerHandler(db)
 	pairHandler := handlers.NewPairHandler(db)
 	modelHandler := handlers.NewModelHandler(db, os.Getenv("QUANT_SERVICE_HOST"))
+	modelChosenPairsHandler := handlers.NewModelChosenPairsHandler(db)
 
 	router.GET("/auth/google/login", authHandler.GoogleLogin)
 	router.GET("/auth/google/callback", authHandler.GoogleCallback)
@@ -32,6 +33,10 @@ func NewServer(cfg *config.Config, db *gorm.DB) *gin.Engine {
 		protected.GET("/pairs/:id", pairHandler.GetSuggestedPairByID)
 
 		protected.POST("/ml/fit-rlrt", modelHandler.ComputeRLRT)
+
+		protected.GET("/model-chosen-pairs", modelChosenPairsHandler.GetAllModelChosenPairs)
+		protected.GET("/model-chosen-pairs/trades", modelChosenPairsHandler.GetModelChosenPairTradesByPair)
+		protected.GET("/model-chosen-pairs/metrics", modelChosenPairsHandler.GetModelChosenPairMetricsByPair)
 	}
 
 	return router

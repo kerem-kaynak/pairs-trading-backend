@@ -40,7 +40,6 @@ func Init() (*gorm.DB, error) {
 
 	dbPool := stdlib.OpenDB(*config)
 
-	// Set connection pool settings
 	dbPool.SetMaxOpenConns(25)
 	dbPool.SetMaxIdleConns(5)
 	dbPool.SetConnMaxLifetime(5 * time.Minute)
@@ -53,7 +52,6 @@ func Init() (*gorm.DB, error) {
 		return nil, fmt.Errorf("gorm.Open: %v", err)
 	}
 
-	// Test the connection
 	err = dbPool.Ping()
 	if err != nil {
 		return nil, fmt.Errorf("failed to ping database: %v", err)
@@ -61,13 +59,11 @@ func Init() (*gorm.DB, error) {
 
 	log.Println("Successfully connected to Cloud SQL database")
 
-	// Set the search path to include the 'gold' schema
 	err = gormDB.Exec("SET search_path TO gold, public").Error
 	if err != nil {
 		return nil, fmt.Errorf("failed to set search path: %v", err)
 	}
 
-	// Check if tables exist without creating them
 	migrator := gormDB.Migrator()
 	tables := []interface{}{
 		&models.ETFDailyOHLC{},
@@ -82,7 +78,6 @@ func Init() (*gorm.DB, error) {
 		}
 	}
 
-	// AutoMigrate only for User model
 	err = gormDB.AutoMigrate(&models.User{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to auto migrate User model: %v", err)
