@@ -1,6 +1,6 @@
 module pairs-trading-backend
 
-go 1.21.0
+go 1.22
 
 toolchain go1.22.4
 
@@ -73,6 +73,7 @@ require (
 	golang.org/x/sys v0.24.0 // indirect
 	golang.org/x/text v0.17.0 // indirect
 	golang.org/x/time v0.6.0 // indirect
+	gonum.org/v1/gonum v0.15.1
 	google.golang.org/api v0.191.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240812133136-8ffd90a71988 // indirect
 	google.golang.org/grpc v1.65.0 // indirect

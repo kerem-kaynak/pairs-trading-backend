@@ -1,5 +1,3 @@
-// internal/handlers/pair_handler.go
-
 package handlers
 
 import (

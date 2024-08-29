@@ -1,6 +1,7 @@
 package http
 
 import (
+	"os"
 	"pairs-trading-backend/internal/auth"
 	"pairs-trading-backend/internal/config"
 	"pairs-trading-backend/internal/handlers"
@@ -15,6 +16,7 @@ func NewServer(cfg *config.Config, db *gorm.DB) *gin.Engine {
 	authHandler := handlers.NewAuthHandler(db, cfg)
 	tickerHandler := handlers.NewTickerHandler(db)
 	pairHandler := handlers.NewPairHandler(db)
+	modelHandler := handlers.NewModelHandler(db, os.Getenv("QUANT_SERVICE_HOST"))
 
 	router.GET("/auth/google/login", authHandler.GoogleLogin)
 	router.GET("/auth/google/callback", authHandler.GoogleCallback)
@@ -24,9 +26,12 @@ func NewServer(cfg *config.Config, db *gorm.DB) *gin.Engine {
 	{
 		protected.GET("/ticker/:ticker/details", tickerHandler.GetTickerDetails)
 		protected.GET("/ticker/:ticker/daily-ohlc", tickerHandler.GetETFDailyOHLC)
+		protected.GET("/ticker/:ticker/news-mentions", tickerHandler.GetTickerNews)
 
 		protected.GET("/pairs", pairHandler.GetAllSuggestedPairs)
 		protected.GET("/pairs/:id", pairHandler.GetSuggestedPairByID)
+
+		protected.POST("/ml/fit-rlrt", modelHandler.ComputeRLRT)
 	}
 
 	return router
