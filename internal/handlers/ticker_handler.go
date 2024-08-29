@@ -28,6 +28,22 @@ func NewTickerHandler(db *gorm.DB) *TickerHandler {
 	return &TickerHandler{DB: db}
 }
 
+func (h *TickerHandler) GetAllTickers(c *gin.Context) {
+	var allTickers []models.Ticker
+	result := h.DB.Find(&allTickers)
+
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Ticker not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve ticker details"})
+		return
+	}
+
+	c.JSON(http.StatusOK, allTickers)
+}
+
 func (h *TickerHandler) GetTickerDetails(c *gin.Context) {
 	ticker := c.Param("ticker")
 
